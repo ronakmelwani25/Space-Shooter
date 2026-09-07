@@ -9,24 +9,25 @@ screen.fill("white")
 ybullet=[]
 rbullet=[]
 
-bg=pygame.image.load("Lesson 4 - Space Shooter/Images/space.png")
+bg=pygame.image.load("Python/Pygame/Lesson 4 - Space Shooter/Images/space.png")
 bgscale=pygame.transform.scale(bg,(900,600))
 
-ys=pygame.image.load("Lesson 4 - Space Shooter/Images/spaceship_yellow.png")
+ys=pygame.image.load("Python/Pygame/Lesson 4 - Space Shooter/Images/spaceship_yellow.png")
 ysscale=pygame.transform.scale(ys,(50,50))
 y=pygame.transform.rotate(ysscale,90)
 
-rs=pygame.image.load("Lesson 4 - Space Shooter/Images/spaceship_red.png")
+rs=pygame.image.load("Python/Pygame/Lesson 4 - Space Shooter/Images/spaceship_red.png")
 rsscale=pygame.transform.scale(rs,(50,50))
 r=pygame.transform.rotate(rsscale,-90)
 
-bsound=pygame.mixer.Sound("Lesson 4 - Space Shooter/Images/Gun+Silencer.mp3")
+bsound=pygame.mixer.Sound("Python/Pygame/Lesson 4 - Space Shooter/Images/Gun+Silencer.mp3")
+bhit=pygame.mixer.Sound("Python\Pygame\Lesson 4 - Space Shooter\Images\Grenade+1.mp3")
 
 border=pygame.Rect(440,0,20,1000)
 yrect=pygame.Rect(100,440,50,50)
 rrect=pygame.Rect(800,300,50,50)
 
-font1=pygame.font.SysFont("Impact",100)
+font1=pygame.font.SysFont("Impact",30)
 yscore=5
 rscore=5
 
@@ -73,10 +74,35 @@ while True:
     for i in ybullet:
         pygame.draw.rect(screen,"yellow",i)
         i.x+=1
+        if i.colliderect(rrect):
+            rscore-=1
+            bhit.play()
+            ybullet.remove(i)
+
     for i in rbullet:
         pygame.draw.rect(screen,"red",i)
         i.x-=1
+        if i.colliderect(yrect):
+            yscore-=1
+            bhit.play()
+            rbullet.remove(i)
 
+    if rscore==0:
+        screen.fill("yellow")
+        ytext=font1.render("YELLOW",True,"Black")
+        ytext2=font1.render("WINS",True,"Black")
+        screen.blit(ytext,(400,400))
+        screen.blit(ytext2,(400,440))
+
+    if yscore==0:
+        screen.fill("red")
+        rtext=font1.render("RED",True,"White")
+        rtext2=font1.render("WINS",True,"White")
+        screen.blit(rtext,(400,400))
+        screen.blit(rtext2,(400,440))
+
+    yhealth=font1.render("Lives: "+ str(yscore),True,"Yellow")
     rhealth=font1.render("Lives: "+ str(rscore),True,"red")
-    screen.blit(rhealth,(820,10))
+    screen.blit(rhealth,(800,10))
+    screen.blit(yhealth,(10,10))
     pygame.display.update()
